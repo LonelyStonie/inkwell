@@ -256,7 +256,7 @@ function AppInner() {
       )}
 
       <footer className="border-t border-stone-200 mt-12 py-6 text-center text-sm text-stone-500">
-        <p>Inkwell — Share your stories with the world</p>
+        <p>TheTaleDistrict — Share your stories with the world</p>
       </footer>
     </div>
   );
@@ -275,8 +275,8 @@ function Header({ onGoHome, onGoAdmin, onPublish, onShowAuth, showToast }) {
         <button onClick={onGoHome} className="flex items-center gap-2 hover:opacity-80 transition">
           <BookOpen className="w-7 h-7" />
           <div className="text-left">
-            <h1 className="text-xl font-bold tracking-tight">Inkwell</h1>
-            <p className="text-xs text-amber-200/80 -mt-0.5">A home for stories</p>
+            <h1 className="text-xl font-bold tracking-tight">TheTaleDistrict</h1>
+            <p className="text-xs text-amber-200/80 -mt-0.5">Where every tale finds a home</p>
           </div>
         </button>
 
