@@ -693,8 +693,8 @@ function StoryDetailView({ story, allStories, categories, onBack, onSelectStory,
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
-        <article className={`${themes[readerTheme]} rounded-2xl p-6 sm:p-10 shadow-sm transition-colors`}>
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-8">
+        <article className={`${themes[readerTheme]} rounded-2xl p-6 sm:p-10 shadow-sm transition-colors min-w-0 overflow-hidden`}>
           {story.category && (
             <div className="text-sm mb-3 flex items-center gap-2 flex-wrap">
               <span className="font-medium text-amber-700">{story.category.name}</span>
@@ -726,7 +726,8 @@ function StoryDetailView({ story, allStories, categories, onBack, onSelectStory,
             </div>
           )}
 
-          <h1 className="text-3xl sm:text-4xl font-bold mb-3 leading-tight" style={{ fontFamily: 'ui-serif, Georgia, serif' }}>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3 leading-tight"
+            style={{ fontFamily: 'ui-serif, Georgia, serif', overflowWrap: 'anywhere', wordBreak: 'break-word' }}>
             {story.title}
           </h1>
 
@@ -756,7 +757,8 @@ function StoryDetailView({ story, allStories, categories, onBack, onSelectStory,
           </div>
 
           {story.excerpt && (
-            <p className="text-lg italic opacity-80 mb-6 pl-4 border-l-4 border-amber-600">
+            <p className="text-lg italic opacity-80 mb-6 pl-4 border-l-4 border-amber-600"
+              style={{ overflowWrap: 'anywhere', wordBreak: 'break-word' }}>
               {story.excerpt}
             </p>
           )}
@@ -765,6 +767,8 @@ function StoryDetailView({ story, allStories, categories, onBack, onSelectStory,
             style={{
               fontFamily: 'ui-serif, Georgia, "Times New Roman", serif',
               fontSize: `${fontSize}px`, lineHeight: 1.8,
+              overflowWrap: 'anywhere',
+              wordBreak: 'break-word',
             }}>
             {story.content || <em className="opacity-60">No content yet.</em>}
           </div>
