@@ -256,6 +256,7 @@ function AppInner() {
             categories={categories}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
+            onNavigate={goHome}
             onSelectStory={openStory}
             onCreateNew={() => setShowCreateModal(true)}
           />
@@ -544,7 +545,7 @@ function MobileMenu({ categories, currentFilter, onNavigate, onClose, onPublish,
 // =====================================================
 // HOME VIEW
 // =====================================================
-function HomeView({ stories, totalStories, currentFilter, categories, searchQuery, setSearchQuery, onSelectStory, onCreateNew }) {
+function HomeView({ stories, totalStories, currentFilter, categories, searchQuery, setSearchQuery, onNavigate, onSelectStory, onCreateNew }) {
   const { isAdmin } = useAuth();
 
   const currentCat = currentFilter.category ? categories.find(c => c.slug === currentFilter.category) : null;
@@ -567,12 +568,71 @@ function HomeView({ stories, totalStories, currentFilter, categories, searchQuer
         <p className="text-stone-600">{subheading}</p>
       </div>
 
-      <div className="mb-8 relative max-w-2xl mx-auto">
+      <div className="mb-4 relative max-w-2xl mx-auto">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
         <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
           placeholder="Search by title or author..."
           className="w-full pl-12 pr-4 py-3 rounded-xl border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-amber-700" />
       </div>
+
+      {/* Category pills */}
+      <div className="mb-3 flex flex-wrap gap-2 justify-center">
+        <button
+          onClick={() => onNavigate()}
+          className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${
+            !currentFilter.category
+              ? 'bg-amber-800 text-white shadow-md'
+              : 'bg-white text-stone-700 hover:bg-amber-50 border border-stone-200'
+          }`}
+        >
+          All
+        </button>
+        {categories.map(cat => (
+          <button
+            key={cat.id}
+            onClick={() => onNavigate({ category: cat.slug, subcategory: null })}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${
+              currentFilter.category === cat.slug
+                ? 'bg-amber-800 text-white shadow-md'
+                : 'bg-white text-stone-700 hover:bg-amber-50 border border-stone-200'
+            }`}
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Subcategory pills — only show when a category is selected */}
+      {currentCat && currentCat.subcategories.length > 0 && (
+        <div className="mb-8 flex flex-wrap gap-2 justify-center">
+          <button
+            onClick={() => onNavigate({ category: currentCat.slug, subcategory: null })}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition ${
+              !currentFilter.subcategory
+                ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                : 'bg-stone-50 text-stone-600 hover:bg-amber-50 border border-stone-200'
+            }`}
+          >
+            All {currentCat.name}
+          </button>
+          {currentCat.subcategories.map(sub => (
+            <button
+              key={sub.id}
+              onClick={() => onNavigate({ category: currentCat.slug, subcategory: sub.slug })}
+              className={`px-3 py-1 rounded-full text-xs font-medium transition ${
+                currentFilter.subcategory === sub.slug
+                  ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                  : 'bg-stone-50 text-stone-600 hover:bg-amber-50 border border-stone-200'
+              }`}
+            >
+              {sub.name}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Spacer when no subcategory row */}
+      {!currentCat && <div className="mb-8"></div>}
 
       {stories.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-2xl border-2 border-dashed border-stone-300">
