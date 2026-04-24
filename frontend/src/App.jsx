@@ -335,43 +335,6 @@ function Header({ categories, currentFilter, onNavigate, onGoAdmin, onPublish, o
           </div>
         </button>
 
-        {/* Desktop nav */}
-        <nav className="hidden lg:flex items-center gap-1">
-          <button onClick={() => onNavigate()}
-            className={`px-3 py-2 text-sm rounded-lg hover:bg-amber-800/50 ${!currentFilter.category ? 'bg-amber-800/40 font-semibold' : ''}`}>
-            Home
-          </button>
-          {categories.map(cat => (
-            <div key={cat.id} className="relative"
-              onMouseEnter={() => setOpenDropdown(cat.id)}
-              onMouseLeave={() => setOpenDropdown(null)}>
-              <button onClick={() => onNavigate({ category: cat.slug, subcategory: null })}
-                className={`flex items-center gap-1 px-3 py-2 text-sm rounded-lg hover:bg-amber-800/50 ${currentFilter.category === cat.slug ? 'bg-amber-800/40 font-semibold' : ''}`}>
-                {cat.name}
-                {cat.subcategories.length > 0 && <ChevronDown className="w-3.5 h-3.5" />}
-              </button>
-              {openDropdown === cat.id && cat.subcategories.length > 0 && (
-                <div className="absolute top-full left-0 pt-2 min-w-[200px] z-40">
-                  <div className="bg-white rounded-xl shadow-2xl border border-stone-200 py-2">
-                    <button onClick={() => { onNavigate({ category: cat.slug, subcategory: null }); setOpenDropdown(null); }}
-                      className="w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-amber-50 font-medium">
-                      All {cat.name}
-                    </button>
-                    <div className="border-t border-stone-100 my-1"></div>
-                    {cat.subcategories.map(sub => (
-                      <button key={sub.id}
-                        onClick={() => { onNavigate({ category: cat.slug, subcategory: sub.slug }); setOpenDropdown(null); }}
-                        className={`w-full text-left px-4 py-2 text-sm hover:bg-amber-50 ${currentFilter.subcategory === sub.slug ? 'bg-amber-50 text-amber-800 font-semibold' : 'text-stone-700'}`}>
-                        {sub.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </nav>
-
         <div className="flex items-center gap-2">
           {isAdmin && (
             <button onClick={onPublish}
@@ -436,10 +399,8 @@ function Header({ categories, currentFilter, onNavigate, onGoAdmin, onPublish, o
 
       {mobileOpen && (
         <MobileMenu
-          categories={categories}
-          currentFilter={currentFilter}
-          onNavigate={(f) => { onNavigate(f); setMobileOpen(false); }}
           onClose={() => setMobileOpen(false)}
+          onNavigate={(f) => { onNavigate(f); setMobileOpen(false); }}
           onPublish={() => { onPublish(); setMobileOpen(false); }}
           onShowAuth={(m) => { onShowAuth(m); setMobileOpen(false); }}
           onGoAdmin={() => { onGoAdmin(); setMobileOpen(false); }}
@@ -449,9 +410,8 @@ function Header({ categories, currentFilter, onNavigate, onGoAdmin, onPublish, o
   );
 }
 
-function MobileMenu({ categories, currentFilter, onNavigate, onClose, onPublish, onShowAuth, onGoAdmin }) {
+function MobileMenu({ onClose, onPublish, onShowAuth, onGoAdmin, onNavigate }) {
   const { user, isAdmin, logout } = useAuth();
-  const [expandedCat, setExpandedCat] = useState(null);
 
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
@@ -478,35 +438,9 @@ function MobileMenu({ categories, currentFilter, onNavigate, onClose, onPublish,
 
         <div className="py-2">
           <button onClick={() => onNavigate()}
-            className={`w-full text-left px-4 py-3 text-sm hover:bg-amber-50 ${!currentFilter.category ? 'bg-amber-50 text-amber-800 font-semibold' : 'text-stone-700'}`}>
-            🏠 Home
+            className="w-full text-left px-4 py-3 text-sm hover:bg-amber-50 text-stone-700 flex items-center gap-2">
+            <BookOpen className="w-4 h-4" /> Home
           </button>
-          {categories.map(cat => (
-            <div key={cat.id}>
-              <button onClick={() => setExpandedCat(e => e === cat.id ? null : cat.id)}
-                className={`w-full text-left px-4 py-3 text-sm flex items-center justify-between hover:bg-amber-50 ${currentFilter.category === cat.slug ? 'text-amber-800 font-semibold' : 'text-stone-700'}`}>
-                <span>{cat.name}</span>
-                {cat.subcategories.length > 0 && <ChevronDown className={`w-4 h-4 transition ${expandedCat === cat.id ? 'rotate-180' : ''}`} />}
-              </button>
-              {expandedCat === cat.id && (
-                <div className="bg-stone-50">
-                  <button onClick={() => onNavigate({ category: cat.slug, subcategory: null })}
-                    className="w-full text-left pl-8 pr-4 py-2 text-sm text-stone-600 hover:bg-amber-50">
-                    All {cat.name}
-                  </button>
-                  {cat.subcategories.map(sub => (
-                    <button key={sub.id} onClick={() => onNavigate({ category: cat.slug, subcategory: sub.slug })}
-                      className={`w-full text-left pl-8 pr-4 py-2 text-sm hover:bg-amber-50 ${currentFilter.subcategory === sub.slug ? 'text-amber-800 font-semibold' : 'text-stone-600'}`}>
-                      {sub.name}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div className="border-t border-stone-200 py-2">
           {isAdmin && (
             <>
               <button onClick={onPublish}
